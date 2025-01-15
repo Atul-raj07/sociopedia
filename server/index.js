@@ -10,6 +10,8 @@ import helmet from "helmet"
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+import authRoute from "./routes/auth.routes.js"
+
 import { register } from './controller/auth.controller.js';
 
 // config
@@ -42,6 +44,7 @@ const upload = multer({storage})
  } 
  mongo() 
 
+ app.use("/auth",authRoute)
 app.get('/', (req, res) =>{
 res.send("heheheheh");
 
