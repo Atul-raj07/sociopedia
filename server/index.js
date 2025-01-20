@@ -9,10 +9,13 @@ import morgan from 'morgan';
 import helmet from "helmet"
 import path from 'path';
 import { fileURLToPath } from 'url';
+import cookieParser from 'cookie-parser';
 
 import authRoute from "./routes/auth.routes.js"
+import usersRoute from "./routes/users.routes.js"
 
 import { register } from './controller/auth.controller.js';
+import { verifyToken } from './middlewares/auth.middleware.js';
 
 // config
 const __filename = fileURLToPath(new URL(import.meta.url));
@@ -27,6 +30,7 @@ app.use(bodyParser.json({limit:"30mb",extended:true}))
 app.use(bodyParser.urlencoded({limit:"30mb",extended:true}))
 app.use(cors())
 app.use("/assets",express.static(path.join(__dirname, "public/assets")));
+app.use(cookieParser());
 
 const storage = multer.diskStorage({
     destination:function(req, res,cb){
@@ -45,14 +49,15 @@ const upload = multer({storage})
  mongo() 
 
  app.use("/auth",authRoute)
+ app.use("/users",usersRoute)
 app.get('/', (req, res) =>{
 res.send("heheheheh");
 
 })
 
-app.post('/auth/register',upload.single("picture"),register)
+app.post('/auth/register',upload.single("picture"),verifyToken,register)
 
-const port = process.env.PORT
+const port = process.env.PORT || 5001
 
 app.listen(port,()=>{
     console.log(port)
