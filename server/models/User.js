@@ -38,5 +38,5 @@ const userModel = new mongoose.Schema({
       impressions: Number,
       
     },{ timestamps: true })
-    const user = mongoose.model("user",userModel)
-    export default user
+    const User = mongoose.model("user",userModel)
+    export default User

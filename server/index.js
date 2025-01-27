@@ -13,9 +13,11 @@ import cookieParser from 'cookie-parser';
 
 import authRoute from "./routes/auth.routes.js"
 import usersRoute from "./routes/users.routes.js"
+import postsRoute from "./routes/posts.routes.js"
 
 import { register } from './controller/auth.controller.js';
 import { verifyToken } from './middlewares/auth.middleware.js';
+import { createPost } from './controller/posts.controller.js';
 
 // config
 const __filename = fileURLToPath(new URL(import.meta.url));
@@ -34,10 +36,10 @@ app.use(cookieParser());
 
 const storage = multer.diskStorage({
     destination:function(req, res,cb){
-        cb(null,"/public/assets")
+        cb(null,"./public/assets")
     },
-    filename:function(req, res,cb){
-        cb(null,res.file.originalname)
+    filename:function(req,file,cb){
+        cb(null,file.originalname)
     }
 })
 const upload = multer({storage})
@@ -50,13 +52,14 @@ const upload = multer({storage})
 
  app.use("/auth",authRoute)
  app.use("/users",usersRoute)
+ app.use("/posts",postsRoute)
 app.get('/', (req, res) =>{
 res.send("heheheheh");
 
 })
 
-app.post('/auth/register',upload.single("picture"),verifyToken,register)
-
+app.post('/auth/register',upload.single("picture"),register)
+app.post("/posts",verifyToken,upload.single("picture"),createPost)
 const port = process.env.PORT || 5001
 
 app.listen(port,()=>{

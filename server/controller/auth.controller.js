@@ -19,7 +19,7 @@ export  const register = async (req, res) =>{
         password : saltpassword,
         picturepath
             })
-            const token = jwt.sign({userId:user._id,email:user.email},process.env.JWT_SECRET_KEY)
+            const token = jwt.sign({id:user._id,email:user.email},process.env.JWT_SECRET_KEY)
             res.cookie("auth",token)
             res.json({message:"user created successfully",user})
     }catch(error){
@@ -34,7 +34,7 @@ export const loginController = async (req, res) => {
     if(!user) return res.json({message:"no user found"})
         const isMatched = await bcrypt.compare(password, user.password)
     if(!isMatched) return res.json({message:"password mismatch"})
-        const token = jwt.sign({userId:user._id,email:user.email},process.env.JWT_SECRET_KEY)
+        const token = jwt.sign({id: user._id,email: user.email},process.env.JWT_SECRET_KEY)
     res.cookie("auth",token)
     res.send(`${user}loggedInSuccess`)
 }
