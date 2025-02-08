@@ -59,7 +59,7 @@ res.send("heheheheh");
 })
 
 app.post('/auth/register',upload.single("picture"),register)
-app.post("/posts",verifyToken,upload.single("picture"),createPost)
+app.post("/posts/createpost",verifyToken,upload.single("picture"),createPost)
 const port = process.env.PORT || 5001
 
 app.listen(port,()=>{

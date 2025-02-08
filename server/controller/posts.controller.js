@@ -24,5 +24,6 @@ if (!user) {
     res.send(userpost)
 }
 export const getfeeds = async (req,res) => {
-    
+    const post = await Post.find()
+    res.send(post)
 }
