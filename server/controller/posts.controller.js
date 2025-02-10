@@ -27,3 +27,32 @@ export const getfeeds = async (req,res) => {
     const post = await Post.find()
     res.send(post)
 }
+
+export const getuserpost = async (req,res) =>{
+    const userId = req.user.id
+    const post = await Post.find({userId})
+    res.send(post)
+}
+
+export const getlikes = async (req,res) =>{
+    const {id} = req.params
+    const {userId} = req.body
+    const post = await Post.findOne({ _id: id })
+  
+    const isliked =  post.likes.get(userId)
+
+    if (isliked) {
+        post.likes.delete(userId)
+
+    }else{
+        post.likes.set(userId,true)
+
+    }
+    const updatePost = await Post.findOneAndUpdate(
+        { _id: id },
+        {likes: post.likes},
+        {new :true}
+
+    )
+    res.send(updatePost)
+}
