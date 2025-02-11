@@ -19,6 +19,9 @@ import { register } from './controller/auth.controller.js';
 import { verifyToken } from './middlewares/auth.middleware.js';
 import { createPost } from './controller/posts.controller.js';
 
+import Post from './models/Post.js';
+import User from './models/User.js';
+import {users , posts} from '../server/data/index.data.js'
 // config
 const __filename = fileURLToPath(new URL(import.meta.url));
 const __dirname = path.dirname(__filename);
