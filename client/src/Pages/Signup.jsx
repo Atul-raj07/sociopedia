@@ -1,51 +1,29 @@
-import React, { useState } from 'react';
+import React from 'react';
 import AuthForm from '../components/AuthForm';
-
+import axios from "axios"
 const Signup = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setlastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const submitHandler = (e) => {
-    e.preventDefault();
-    console.log("Name:", firstName + lastName, "Email:", email, "Password:", password);
-    setFirstName("");
-    setEmail("");
-    setPassword("");
-    setlastName("");
+  const handleSignup = async (values) => {
+    try {
+      const res = await axios.post('http://localhost:5000/auth/register', values);
+      console.log('Response:', res.data);
+    } catch (error) {
+      console.error('Signup error:', error);
+    }
+    
   };
 
   return (
-    <AuthForm
+    <AuthForm  
       heading="Sign Up"
       inputs={[
-        {
-          type: "text",
-          value: firstName,
-          onChange: (e) => setFirstName(e.target.value),
-        placeholder: "firstname",
-        },
-        {
-          type: "text",
-          value: lastName,
-          onChange: (e) => setlastName(e.target.value),
-        placeholder: "lastname",
-        },
-        {
-          type: "email",
-          value: email,
-          onChange: (e) => setEmail(e.target.value),
-          placeholder: "email",
-        },
-        {
-          type: "password",
-          value: password,
-          onChange: (e) => setPassword(e.target.value),
-          placeholder: "password",
-        },
+        { type: "text", name: "firstName", placeholder: "Firstname" },
+        { type: "text", name: "lastName", placeholder: "Lastname" },
+        { type: "email", name: "email", placeholder: "Email" },
+        { type: "password", name: "password", placeholder: "Password" },
+        { type: "file", name: "picturepath", placeholder: "picturepath" },
       ]}
-      onSubmit={submitHandler}
+      isLogin={false}
+      onSubmit={handleSignup}
       buttonText="Sign Up"
       footerText="Already have an account? Sign In"
       footerLink="/"
