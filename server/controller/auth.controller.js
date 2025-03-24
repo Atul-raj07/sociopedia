@@ -5,16 +5,16 @@ import cookieParser from 'cookie-parser';
 import userModel from "../models/User.js";
 export  const register = async (req, res) =>{
     try{
-        const {firstname,lastname,email,password,picturepath} = req.body
-        if(!firstname || !lastname || !email || !password || !picturepath) return res.json("fields are required")
+        const {firstName,lastName,email,password,picturepath} = req.body
+        if(!firstName || !lastName || !email || !password ) return res.json("fields are required")
         const userEmail = await   userModel.findOne({email: email})
             if(userEmail) return res.json("enmail already exists")
                 const salt = await bcrypt.genSalt(10)
             const saltpassword = await bcrypt.hash(password, salt)
 
           const user = await userModel.create({
-        firstname,
-        lastname,
+        firstName,
+        lastName,
         email,
         password : saltpassword,
         picturepath
