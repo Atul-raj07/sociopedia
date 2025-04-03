@@ -8,7 +8,7 @@ export  const register = async (req, res) =>{
         const {firstName,lastName,email,password,picturepath} = req.body
         if(!firstName || !lastName || !email || !password ) return res.json("fields are required")
         const userEmail = await   userModel.findOne({email: email})
-            if(userEmail) return res.json("enmail already exists")
+            if(userEmail) return (res.json("email already exists"))
                 const salt = await bcrypt.genSalt(10)
             const saltpassword = await bcrypt.hash(password, salt)
 
@@ -28,15 +28,26 @@ export  const register = async (req, res) =>{
 }
 
 export const loginController = async (req, res) => {
-    const {email, password} = req.body
-    if(!email || !password) return res.json({message:"feilds are required"})
-        const user = await userModel.findOne({email: email})
-    if(!user) return res.json({message:"no user found"})
-        const isMatched = await bcrypt.compare(password, user.password)
-    if(!isMatched) return res.json({message:"password mismatch"})
-        const token = jwt.sign({id: user._id,email: user.email},process.env.JWT_SECRET_KEY)
-    res.cookie("auth",token)
-    res.send(`${user}loggedInSuccess`)
+    try {
+        const { email, password } = req.body;
+        const user = await userModel.findOne({ email });
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        const isMatched = await bcrypt.compare(password, user.password);
+        if (!isMatched) return res.status(401).json({ message: "Invalid credentials" });
+
+        const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET_KEY);
+        
+        res.cookie("auth", token);
+        
+        res.status(200).json({ 
+            message: "Logged in successfully!",
+            user,
+            token
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Server error" });
+    }
 }
 export const logoutController = (req, res) => {
     res.clearCookie("auth")

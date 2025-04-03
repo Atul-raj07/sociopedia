@@ -1,11 +1,27 @@
 import React from 'react';
 import AuthForm from '../components/AuthForm';
 import axios from "axios"
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setLogin } from '../store/reducers/UserReducer';
 const Signup = () => {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
   const handleSignup = async (values) => {
     try {
       const res = await axios.post('http://localhost:5000/auth/register', values);
-      console.log('Response:', res.data);
+      console.log(res);
+       
+      if(res.data === 'email already exist' ){
+        navigate("/auth/login")
+      }
+      dispatch(setLogin({
+        user: res.data.user,
+        token: res.data.token
+    }));
+    
+    // Redirect to feeds page
+    navigate('/posts/getfeeds');
     } catch (error) {
       console.error('Signup error:', error);
     }
@@ -26,7 +42,7 @@ const Signup = () => {
       onSubmit={handleSignup}
       buttonText="Sign Up"
       footerText="Already have an account? Sign In"
-      footerLink="/"
+      footerLink="/auth/login"
     />
   );
 };

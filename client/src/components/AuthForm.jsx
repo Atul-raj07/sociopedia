@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import * as yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import Logo from './Logo';
 
 // Yup schemas for validation
 const registerSchema = yup.object().shape({
@@ -48,11 +49,7 @@ const AuthForm = ({
   return (
     <div className="h-screen w-full flex items-center justify-center bg-slate-50 p-10">
       <div className="w-full cursor-pointer max-w-md rounded-xl flex flex-col items-center bg-slate-100 p-6">
-        <img
-          src="/assets/letter-c-and-dove-png_265386-removebg-preview.png"
-          alt="Logo"
-          className="h-40 w-40 -mt-5"
-        />
+       <Logo/>
         <h1 className="text-xl font-semibold tracking-wide text-sky-600">
           {heading}
         </h1>

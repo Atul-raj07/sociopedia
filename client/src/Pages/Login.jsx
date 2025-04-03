@@ -10,19 +10,26 @@ const Login = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const handleLogin = async (values) => {
-    
-      try {
-        const res = await axios.post('http://localhost:5000/auth/login', values);
-        console.log('Response:', res.data);
-        if (res.status === 200) {
-          navigate("/home")
-         
-        }
-      } catch (error) {
+    try {
+        const res = await axios.post('http://localhost:5000/auth/login', values ,{
+          withCredentials:true
+        });
+        
+        // Redux store mein user data save karo
+        dispatch(setLogin({
+            user: res.data.user,
+            token: res.data.token
+        }));
+        
+        // Redirect to feeds page
+        navigate('/posts/getfeeds');
+        
+    } catch (error) {
         console.error('Login error:', error);
-      }
-   
-  };
+        // Error message dikhao user ko
+        alert(error.response?.data?.message || 'Login failed');
+    }
+};
 
   return (
     <AuthForm
@@ -37,7 +44,7 @@ const Login = () => {
       onSubmit={handleLogin}
       buttonText="Login"
       footerText="Don't have an account yet? Sign Up"
-      footerLink="/signup"
+      footerLink="/auth/register"
     />
   );
 };
